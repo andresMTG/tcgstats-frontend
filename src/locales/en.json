@@ -1,0 +1,116 @@
+{
+  "brand": "TCG Stats",
+  "pageTitle": "TCG Stats — Play with intent. Grow with data.",
+  "pageDescription": "Log your TCG matches, understand your patterns, and grow with data.",
+  "navigationLabel": "Main navigation",
+  "languageLabel": "Language",
+  "languagePreferenceError": "Your language preference could not be saved in this browser.",
+  "nav": {
+    "howItWorks": "How it works",
+    "games": "Games",
+    "login": "Log in",
+    "signup": "Create account"
+  },
+  "hero": {
+    "eyebrow": "Game intelligence for TCG players",
+    "title": "Play with intent.",
+    "titleAccent": "Grow with data.",
+    "description": "Log your matches, understand your patterns, and see where your game can go. Your competitive journey, in focus.",
+    "primaryCta": "Start your journey",
+    "secondaryCta": "Explore the platform",
+    "note": "Built for players who want to improve, match after match."
+  },
+  "dashboard": {
+    "kicker": "PLAYER HUB",
+    "label": "OVERVIEW",
+    "overview": "YOUR PROGRESS",
+    "title": "Performance over time",
+    "period": "HISTORY",
+    "legend": "Matches recorded",
+    "sample": "Product illustration",
+    "visualDescription": "Illustration of a performance dashboard",
+    "insight": "Find your patterns",
+    "deckSignal": "Compare your decks"
+  },
+  "games": {
+    "overline": "ONE PLATFORM FOR YOUR GAMES",
+    "list": [
+      "Magic: The Gathering",
+      "Pokémon",
+      "Flesh and Blood",
+      "Yu-Gi-Oh!",
+      "Digimon",
+      "One Piece",
+      "Lorcana"
+    ]
+  },
+  "features": {
+    "overline": "PLAY. LOG. IMPROVE.",
+    "title": "More than results.",
+    "titleAccent": "Clarity to improve.",
+    "description": "Turn every tournament into a learning opportunity. Track what works and plan your next steps beyond intuition.",
+    "cards": [
+      {
+        "title": "Your journey, recorded",
+        "description": "Organize decks, tournaments, and matches in one place. A reliable history starts with every detail."
+      },
+      {
+        "title": "See your patterns",
+        "description": "Compare performance by deck, opponent, and tournament phase to better understand your strengths."
+      },
+      {
+        "title": "Improve with purpose",
+        "description": "Use your own results to choose what to practice and arrive better prepared for your next event."
+      }
+    ]
+  },
+  "closing": {
+    "overline": "YOUR NEXT MATCH STARTS HERE",
+    "title": "Your best game is still ahead.",
+    "description": "Build your match history and turn experience into progress.",
+    "cta": "Create my account"
+  },
+  "menu": {
+    "account": "YOUR ACCOUNT",
+    "profile": "My profile",
+    "decks": "My decks",
+    "tournaments": "Tournaments",
+    "performance": "Performance",
+    "logout": "Log out"
+  },
+  "auth": {
+    "checkingSession": "Checking your session",
+    "loadUserError": "Your account could not be loaded.",
+    "refreshError": "Your session could not be refreshed.",
+    "signupError": "Your account could not be created.",
+    "loginError": "Invalid email or password.",
+    "logoutError": "Your session could not be ended.",
+    "invalidUserResponse": "The server returned invalid user data.",
+    "close": "Close",
+    "signupSuccessEyebrow": "ACCOUNT CREATED",
+    "signupSuccessTitle": "Welcome to the table.",
+    "signupSuccessDescription": "Your account is ready. Log in to start recording your journey.",
+    "goToLogin": "Go to log in",
+    "signupEyebrow": "START HERE",
+    "signupTitle": "Create your account",
+    "signupDescription": "A new way to track your progress starts with your first entry.",
+    "loginEyebrow": "GOOD TO HAVE YOU BACK",
+    "loginTitle": "Log in to your account",
+    "loginDescription": "Pick up where your competitive journey left off.",
+    "nameLabel": "Name",
+    "namePlaceholder": "What should we call you?",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
+    "working": "Please wait...",
+    "createAccount": "Create account",
+    "loginSubmit": "Log in",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "noAccount": "Don't have an account yet?",
+    "signupLink": "Create account"
+  },
+  "footer": "Built for players who take the next turn seriously.",
+  "footerStatus": "Growing"
+}

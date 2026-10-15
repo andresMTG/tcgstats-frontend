@@ -1,0 +1,69 @@
+:root {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #f0f0f4;
+  background: #0a0a0d;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  --bg: #0a0a0d;
+  --surface: #111115;
+  --surface-raised: #17171d;
+  --line: rgba(255, 255, 255, 0.09);
+  --muted: #95959f;
+  --soft: #c1c1ca;
+  --accent: #c8ff57;
+  --accent-dark: #a9e739;
+  --mono: 'Cascadia Mono', Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+}
+
+body:has(.auth-dialog[open]) {
+  overflow: hidden;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+

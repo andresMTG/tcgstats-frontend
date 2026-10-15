@@ -1,0 +1,116 @@
+{
+  "brand": "TCG Stats",
+  "pageTitle": "TCG Stats — Juega con intención. Evoluciona con datos.",
+  "pageDescription": "Registra tus partidas de TCG, comprende tus patrones y evoluciona con datos.",
+  "navigationLabel": "Navegación principal",
+  "languageLabel": "Idioma",
+  "languagePreferenceError": "No se pudo guardar tu preferencia de idioma en este navegador.",
+  "nav": {
+    "howItWorks": "Cómo funciona",
+    "games": "Juegos",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta"
+  },
+  "hero": {
+    "eyebrow": "Inteligencia de juego para TCG",
+    "title": "Juega con intención.",
+    "titleAccent": "Evoluciona con datos.",
+    "description": "Registra tus partidas, comprende tus patrones y descubre hasta dónde puede llegar tu juego. Tu camino competitivo, con claridad.",
+    "primaryCta": "Empieza tu camino",
+    "secondaryCta": "Conoce la plataforma",
+    "note": "Hecho para quienes quieren mejorar partida tras partida."
+  },
+  "dashboard": {
+    "kicker": "CENTRO DEL JUGADOR",
+    "label": "VISTA GENERAL",
+    "overview": "TU PROGRESO",
+    "title": "Rendimiento a lo largo del tiempo",
+    "period": "HISTORIAL",
+    "legend": "Partidas registradas",
+    "sample": "Ilustración del producto",
+    "visualDescription": "Ilustración de un panel de rendimiento",
+    "insight": "Encuentra tus patrones",
+    "deckSignal": "Compara tus mazos"
+  },
+  "games": {
+    "overline": "UNA PLATAFORMA PARA TUS JUEGOS",
+    "list": [
+      "Magic: The Gathering",
+      "Pokémon",
+      "Flesh and Blood",
+      "Yu-Gi-Oh!",
+      "Digimon",
+      "One Piece",
+      "Lorcana"
+    ]
+  },
+  "features": {
+    "overline": "JUEGA. REGISTRA. EVOLUCIONA.",
+    "title": "Más que resultados.",
+    "titleAccent": "Claridad para mejorar.",
+    "description": "Convierte cada torneo en aprendizaje. Sigue lo que funciona y decide tus próximos pasos más allá de la intuición.",
+    "cards": [
+      {
+        "title": "Tu camino, registrado",
+        "description": "Organiza mazos, torneos y partidas en un solo lugar. Un historial confiable empieza con cada detalle."
+      },
+      {
+        "title": "Descubre tus patrones",
+        "description": "Compara tu rendimiento por mazo, oponente y fase del torneo para comprender mejor tus fortalezas."
+      },
+      {
+        "title": "Mejora con propósito",
+        "description": "Usa tus propios resultados para decidir qué practicar y llegar mejor preparado al próximo evento."
+      }
+    ]
+  },
+  "closing": {
+    "overline": "TU PRÓXIMA PARTIDA EMPIEZA AQUÍ",
+    "title": "Tu mejor juego está por venir.",
+    "description": "Construye tu historial y convierte la experiencia en progreso.",
+    "cta": "Crear mi cuenta"
+  },
+  "menu": {
+    "account": "TU CUENTA",
+    "profile": "Mi perfil",
+    "decks": "Mis mazos",
+    "tournaments": "Torneos",
+    "performance": "Rendimiento",
+    "logout": "Cerrar sesión"
+  },
+  "auth": {
+    "checkingSession": "Comprobando tu sesión",
+    "loadUserError": "No se pudo cargar tu cuenta.",
+    "refreshError": "No se pudo renovar tu sesión.",
+    "signupError": "No se pudo crear tu cuenta.",
+    "loginError": "Correo o contraseña incorrectos.",
+    "logoutError": "No se pudo cerrar tu sesión.",
+    "invalidUserResponse": "El servidor devolvió datos de usuario no válidos.",
+    "close": "Cerrar",
+    "signupSuccessEyebrow": "CUENTA CREADA",
+    "signupSuccessTitle": "Te damos la bienvenida.",
+    "signupSuccessDescription": "Tu cuenta está lista. Inicia sesión para empezar a registrar tu camino.",
+    "goToLogin": "Ir al inicio de sesión",
+    "signupEyebrow": "EMPIEZA AQUÍ",
+    "signupTitle": "Crea tu cuenta",
+    "signupDescription": "Una nueva forma de seguir tu progreso empieza con tu primer registro.",
+    "loginEyebrow": "QUÉ BUENO TENERTE DE VUELTA",
+    "loginTitle": "Inicia sesión",
+    "loginDescription": "Continúa donde quedó tu camino competitivo.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "¿Cómo te llamamos?",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Tu contraseña",
+    "working": "Un momento...",
+    "createAccount": "Crear cuenta",
+    "loginSubmit": "Iniciar sesión",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "loginLink": "Inicia sesión",
+    "noAccount": "¿Aún no tienes una cuenta?",
+    "signupLink": "Crear cuenta"
+  },
+  "footer": "Para quienes se toman en serio el próximo turno.",
+  "footerStatus": "En evolución"
+}

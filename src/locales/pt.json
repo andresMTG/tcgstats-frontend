@@ -1,0 +1,116 @@
+{
+  "brand": "TCG Stats",
+  "pageTitle": "TCG Stats — Jogue com intenção. Evolua com dados.",
+  "pageDescription": "Registre suas partidas de TCG, entenda seus padrões e evolua com dados.",
+  "navigationLabel": "Navegação principal",
+  "languageLabel": "Idioma",
+  "languagePreferenceError": "Não foi possível salvar sua preferência de idioma neste navegador.",
+  "nav": {
+    "howItWorks": "Como funciona",
+    "games": "Jogos",
+    "login": "Entrar",
+    "signup": "Criar conta"
+  },
+  "hero": {
+    "eyebrow": "Inteligência de jogo para TCG",
+    "title": "Jogue com intenção.",
+    "titleAccent": "Evolua com dados.",
+    "description": "Registre suas partidas, entenda seus padrões e descubra onde seu jogo pode chegar. Sua jornada competitiva, vista com clareza.",
+    "primaryCta": "Comece sua jornada",
+    "secondaryCta": "Conheça a plataforma",
+    "note": "Feito para quem quer melhorar partida após partida."
+  },
+  "dashboard": {
+    "kicker": "CENTRAL DO JOGADOR",
+    "label": "VISÃO GERAL",
+    "overview": "SEU PROGRESSO",
+    "title": "Desempenho ao longo do tempo",
+    "period": "HISTÓRICO",
+    "legend": "Partidas registradas",
+    "sample": "Ilustração de produto",
+    "visualDescription": "Ilustração de um painel de desempenho",
+    "insight": "Encontre seus padrões",
+    "deckSignal": "Compare seus decks"
+  },
+  "games": {
+    "overline": "UMA PLATAFORMA PARA SEUS JOGOS",
+    "list": [
+      "Magic: The Gathering",
+      "Pokémon",
+      "Flesh and Blood",
+      "Yu-Gi-Oh!",
+      "Digimon",
+      "One Piece",
+      "Lorcana"
+    ]
+  },
+  "features": {
+    "overline": "JOGUE. REGISTRE. EVOLUA.",
+    "title": "Mais que resultados.",
+    "titleAccent": "Clareza para evoluir.",
+    "description": "Transforme cada torneio em aprendizado. Acompanhe o que funciona e leve seus próximos passos para além da intuição.",
+    "cards": [
+      {
+        "title": "Sua jornada, registrada",
+        "description": "Organize decks, torneios e partidas em um só lugar. Um histórico confiável começa com cada detalhe."
+      },
+      {
+        "title": "Enxergue seus padrões",
+        "description": "Compare seu desempenho por deck, oponente e fase do torneio para entender melhor seus pontos fortes."
+      },
+      {
+        "title": "Evolua com propósito",
+        "description": "Use seus próprios resultados para decidir o que praticar e chegar mais preparado ao próximo evento."
+      }
+    ]
+  },
+  "closing": {
+    "overline": "SUA PRÓXIMA PARTIDA COMEÇA AQUI",
+    "title": "Seu melhor jogo ainda está por vir.",
+    "description": "Construa seu histórico e transforme experiência em evolução.",
+    "cta": "Criar minha conta"
+  },
+  "menu": {
+    "account": "SUA CONTA",
+    "profile": "Meu perfil",
+    "decks": "Meus decks",
+    "tournaments": "Torneios",
+    "performance": "Desempenho",
+    "logout": "Sair"
+  },
+  "auth": {
+    "checkingSession": "Verificando sua sessão",
+    "loadUserError": "Não foi possível carregar sua conta.",
+    "refreshError": "Não foi possível renovar sua sessão.",
+    "signupError": "Não foi possível criar sua conta.",
+    "loginError": "E-mail ou senha inválidos.",
+    "logoutError": "Não foi possível encerrar sua sessão.",
+    "invalidUserResponse": "O servidor retornou dados de usuário inválidos.",
+    "close": "Fechar",
+    "signupSuccessEyebrow": "CONTA CRIADA",
+    "signupSuccessTitle": "Bem-vindo à mesa.",
+    "signupSuccessDescription": "Sua conta está pronta. Entre para começar a registrar sua jornada.",
+    "goToLogin": "Ir para o login",
+    "signupEyebrow": "COMECE POR AQUI",
+    "signupTitle": "Crie sua conta",
+    "signupDescription": "Um novo jeito de acompanhar sua evolução começa com seu primeiro registro.",
+    "loginEyebrow": "BOM TER VOCÊ DE VOLTA",
+    "loginTitle": "Entre na sua conta",
+    "loginDescription": "Continue de onde sua jornada competitiva parou.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Como podemos chamar você?",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "voce@email.com",
+    "passwordLabel": "Senha",
+    "passwordPlaceholder": "Sua senha",
+    "working": "Aguarde...",
+    "createAccount": "Criar conta",
+    "loginSubmit": "Entrar",
+    "haveAccount": "Já tem uma conta?",
+    "loginLink": "Entrar",
+    "noAccount": "Ainda não tem uma conta?",
+    "signupLink": "Criar conta"
+  },
+  "footer": "Feito para quem leva o próximo turno a sério.",
+  "footerStatus": "Em evolução"
+}
