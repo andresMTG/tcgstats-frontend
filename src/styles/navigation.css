@@ -5,7 +5,7 @@
 
 .site-header {
   position: relative;
-  z-index: 5;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -186,6 +186,7 @@
 
 .user-dropdown {
   position: absolute;
+  z-index: 21;
   top: calc(100% + 14px);
   right: 0;
   width: 220px;
@@ -230,4 +231,3 @@
   margin: 6px 0;
   background: var(--line);
 }
-

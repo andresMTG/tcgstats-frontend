@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
         },
       },
+      allowedHosts: [environment.VITE_ALLOWED_HOST || 'localhost' || environment.VITE_ALLOWED_HOST2],
     },
   }
 })

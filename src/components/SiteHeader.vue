@@ -42,12 +42,12 @@ onUnmounted(() => {
 
 <template>
   <header class="site-header">
-    <a class="brand" href="#" :aria-label="messages.brand">
+    <a class="brand" :href="user ? '#app/dashboard' : '#'" :aria-label="messages.brand">
       <span class="brand-mark" aria-hidden="true"><span></span></span>
       <span>tcg<span class="brand-accent">stats</span></span>
     </a>
 
-    <nav class="main-nav" :aria-label="messages.navigationLabel">
+    <nav v-if="!user" class="main-nav" :aria-label="messages.navigationLabel">
       <a href="#how-it-works">{{ messages.nav.howItWorks }}</a>
       <a href="#games">{{ messages.nav.games }}</a>
     </nav>
@@ -80,10 +80,6 @@ onUnmounted(() => {
         </button>
         <div v-if="isUserMenuOpen" class="user-dropdown" role="menu">
           <p class="dropdown-heading">{{ messages.menu.account }}</p>
-          <button type="button" role="menuitem" disabled>{{ messages.menu.profile }}</button>
-          <button type="button" role="menuitem" disabled>{{ messages.menu.decks }}</button>
-          <button type="button" role="menuitem" disabled>{{ messages.menu.tournaments }}</button>
-          <button type="button" role="menuitem" disabled>{{ messages.menu.performance }}</button>
           <div class="dropdown-divider"></div>
           <button
             class="logout-button"
