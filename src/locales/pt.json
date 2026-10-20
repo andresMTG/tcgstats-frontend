@@ -92,6 +92,7 @@
     "overview": "VISÃO GERAL",
     "loading": "Carregando seus dados...",
     "loadError": "Não foi possível carregar os dados.",
+    "sessionUnauthorized": "Não foi possível autenticar sua sessão. Atualize a página e tente novamente.",
     "retry": "Tentar novamente",
     "empty": "Ainda não há registros por aqui.",
     "stats": {

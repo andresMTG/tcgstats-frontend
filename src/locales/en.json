@@ -92,6 +92,7 @@
     "overview": "OVERVIEW",
     "loading": "Loading your data...",
     "loadError": "Your data could not be loaded.",
+    "sessionUnauthorized": "Your session could not be authenticated. Refresh the page and try again.",
     "retry": "Try again",
     "empty": "There are no records here yet.",
     "stats": {

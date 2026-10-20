@@ -92,6 +92,7 @@
     "overview": "VISTA GENERAL",
     "loading": "Cargando tus datos...",
     "loadError": "No se pudieron cargar tus datos.",
+    "sessionUnauthorized": "No se pudo autenticar tu sesión. Actualiza la página e inténtalo de nuevo.",
     "retry": "Intentar de nuevo",
     "empty": "Todavía no hay registros.",
     "stats": {

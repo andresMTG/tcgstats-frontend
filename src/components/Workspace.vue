@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import type { User } from '../types/auth'
 import type { Language, LocaleMessages } from '../types/locale'
+import { ApiError } from '../services/auth'
 import {
   games,
   type Deck,
@@ -294,6 +295,9 @@ function decklistHref(decklist: string): string | null {
 }
 
 function errorText(error: unknown): string {
+  if (error instanceof ApiError && error.status === 401) {
+    return props.messages.workspace.sessionUnauthorized
+  }
   return error instanceof Error ? error.message : props.messages.workspace.loadError
 }
 
