@@ -59,6 +59,7 @@ const matchupDeckSelectionTouched = ref(false)
 const tournaments = ref<Tournament[]>([])
 const opponents = ref<Opponent[]>([])
 const matches = ref<Match[]>([])
+const allMatches = ref<Match[]>([])
 const registeredOpponentArchetypes = ref<Array<{ game: GameName; name: string }>>([])
 const deckPerformance = ref<DeckPerformance[]>([])
 const deckMatchupPerformance = ref<DeckMatchupPerformance[]>([])
@@ -74,6 +75,7 @@ const errorMessage = ref('')
 const successMessage = ref('')
 const isSubmissionError = ref(false)
 const matchListLoaded = ref(false)
+const allMatchesLoaded = ref(false)
 const tournamentFlowStep = ref<'closed' | 'tournament' | 'round'>('closed')
 const flowTournament = ref<Tournament | null>(null)
 const flowRound = ref(1)
@@ -132,6 +134,9 @@ const visibleDecks = computed(() =>
 )
 const tournamentDecks = computed(() =>
   decks.value.filter((deck) => deck.game === tournamentDraft.game),
+)
+const editableTournamentDecks = computed(() =>
+  decks.value.filter((deck) => deck.game === editDraft.game),
 )
 const mostRegisteredGame = computed(() => {
   const counts = new Map<GameName, number>(games.map((game) => [game, 0]))
@@ -199,6 +204,87 @@ const resolvedOpponentArchetype = computed(() =>
 const hasValidOpponentArchetype = computed(() => resolvedOpponentArchetype.value.length > 0)
 const totalMatches = computed(() => matches.value)
 const dashboardMatchCount = ref(0)
+type MutationTarget =
+  | { kind: 'deck'; record: Deck }
+  | { kind: 'tournament'; record: Tournament }
+  | { kind: 'opponent'; record: Opponent }
+  | { kind: 'match'; record: Match }
+const mutationDialog = ref<{ action: 'edit' | 'delete'; target: MutationTarget } | null>(null)
+const editDraft = reactive({
+  name: '',
+  game: games[0] as GameName,
+  decklist: '',
+  date: localToday,
+  scope: 'LOCAL' as TournamentScope,
+  deck_uuid: '',
+  is_official_circuit: false,
+  result: 'win' as MatchResult,
+  round_number: 1,
+  phase: 'SWISS' as MatchPhase,
+  opposing_deck_archetype: '',
+  tournament_uuid: '',
+  opponent_uuid: '',
+})
+const mutationImpact = computed(() => {
+  const pending = mutationDialog.value
+  if (!pending) return ''
+  const { kind, record } = pending.target
+  if (pending.action === 'edit') {
+    const editImpacts = props.messages.workspace.mutationImpact
+    if (kind === 'deck') return editImpacts.editDeck
+    if (kind === 'tournament') return editImpacts.editTournament
+    if (kind === 'opponent') return editImpacts.editOpponent
+    return editImpacts.editMatch
+  }
+  const template = props.messages.workspace.mutationImpact[kind]
+  let tournamentsCount = 0
+  let matchesCount = 0
+  if (kind === 'deck') {
+    const affectedTournaments = tournaments.value.filter((tournament) => tournament.deck_uuid === record.uuid)
+    const tournamentIds = new Set(affectedTournaments.map((tournament) => tournament.uuid))
+    tournamentsCount = affectedTournaments.length
+    matchesCount = allMatches.value.filter((match) => tournamentIds.has(match.tournament_uuid)).length
+  } else if (kind === 'tournament') {
+    matchesCount = allMatches.value.filter((match) => match.tournament_uuid === record.uuid).length
+  } else if (kind === 'opponent') {
+    matchesCount = allMatches.value.filter((match) => match.opponent_uuid === record.uuid).length
+  }
+  return template.replace(/\{(tournaments|matches)\}/g, (_placeholder, key: string) =>
+    String(key === 'tournaments' ? tournamentsCount : matchesCount),
+  )
+})
+const mutationAffectedTournaments = computed(() => {
+  const pending = mutationDialog.value
+  if (!pending || pending.action !== 'delete') return ''
+  const { kind, record } = pending.target
+  let affected: Tournament[] = []
+  if (kind === 'deck') {
+    affected = tournaments.value.filter((tournament) => tournament.deck_uuid === record.uuid)
+  } else if (kind === 'tournament') {
+    affected = [record]
+  } else if (kind === 'opponent') {
+    const ids = new Set(
+      allMatches.value
+        .filter((match) => match.opponent_uuid === record.uuid)
+        .map((match) => match.tournament_uuid),
+    )
+    affected = tournaments.value.filter((tournament) => ids.has(tournament.uuid))
+  } else {
+    affected = tournaments.value.filter((tournament) => tournament.uuid === record.tournament_uuid)
+  }
+  if (!affected.length) return ''
+  return props.messages.workspace.mutationImpact.affectedTournaments.replace(
+    '{names}',
+    affected.map((tournament) => tournament.name).join(', '),
+  )
+})
+const mutationRecordName = computed(() => {
+  const target = mutationDialog.value?.target
+  if (!target) return ''
+  return target.kind === 'match'
+    ? `${props.messages.workspace.fields.round} ${target.record.round_number}`
+    : target.record.name
+})
 const dashboardWinRate = computed(() => {
   const count = deckPerformance.value.reduce((total, item) => total + item.matches, 0)
   if (!count) return 0
@@ -312,11 +398,11 @@ async function loadReferenceData(): Promise<void> {
   tournaments.value = tournamentList
   opponents.value = opponentList
 
-  if (!selectedTournamentId.value && tournamentList.length) {
-    selectedTournamentId.value = tournamentList[0].uuid
+  if (!tournamentList.some((tournament) => tournament.uuid === selectedTournamentId.value)) {
+    selectedTournamentId.value = tournamentList[0]?.uuid ?? ''
   }
-  if (!matchDraft.opponent_uuid && opponentList.length) {
-    matchDraft.opponent_uuid = opponentList[0].uuid
+  if (!opponentList.some((opponent) => opponent.uuid === matchDraft.opponent_uuid)) {
+    matchDraft.opponent_uuid = opponentList[0]?.uuid ?? ''
   }
 }
 
@@ -356,9 +442,12 @@ async function loadTournamentMatches(): Promise<void> {
 }
 
 async function loadDashboardMatches(): Promise<void> {
+  allMatchesLoaded.value = false
   const matchGroups = await Promise.all(
     tournaments.value.map((tournament) => productApi.listTournamentMatches(tournament.uuid)),
   )
+  allMatches.value = matchGroups.flat()
+  allMatchesLoaded.value = true
   dashboardMatchCount.value = matchGroups.reduce((count, group) => count + group.length, 0)
   registeredOpponentArchetypes.value = tournaments.value.flatMap((tournament, index) =>
     matchGroups[index].map((match) => ({ game: tournament.game, name: match.opposing_deck_archetype.trim() })),
@@ -401,20 +490,12 @@ async function loadInitialData(): Promise<void> {
 
 async function refreshData(): Promise<void> {
   await runLoad(async () => {
-    if (props.activeView === 'analytics') {
-      await loadAnalytics()
-      return
-    }
-    if (props.activeView === 'matches') {
-      await loadTournamentMatches()
-      return
-    }
-    if (props.activeView === 'dashboard') {
-      await loadReferenceData()
-      await Promise.all([loadAnalytics(), loadDashboardMatches()])
-      return
-    }
     await loadReferenceData()
+    await Promise.all([
+      loadDashboardMatches(),
+      ...(props.activeView === 'analytics' || props.activeView === 'dashboard' ? [loadAnalytics()] : []),
+      ...(props.activeView === 'matches' ? [loadTournamentMatches()] : []),
+    ])
   })
 }
 
@@ -432,6 +513,116 @@ async function runCreate(task: () => Promise<void>, successText?: string): Promi
   } finally {
     isSubmitting.value = false
   }
+}
+
+function beginMutation(target: MutationTarget, action: 'edit' | 'delete'): void {
+  if (action === 'delete' && !allMatchesLoaded.value) {
+    errorMessage.value = props.messages.workspace.impactLoadError
+    isSubmissionError.value = false
+    return
+  }
+  errorMessage.value = ''
+  successMessage.value = ''
+  isSubmissionError.value = false
+  if (action === 'edit') {
+    switch (target.kind) {
+      case 'deck':
+        Object.assign(editDraft, {
+          name: target.record.name,
+          game: target.record.game,
+          decklist: target.record.decklist,
+        })
+        break
+      case 'tournament':
+        Object.assign(editDraft, {
+          name: target.record.name,
+          date: target.record.date.slice(0, 10),
+          game: target.record.game,
+          scope: target.record.scope,
+          deck_uuid: target.record.deck_uuid ?? '',
+          is_official_circuit: target.record.is_official_circuit,
+        })
+        break
+      case 'opponent':
+        editDraft.name = target.record.name
+        break
+      case 'match':
+        Object.assign(editDraft, {
+          result: target.record.result,
+          round_number: target.record.round_number,
+          phase: target.record.phase,
+          opposing_deck_archetype: target.record.opposing_deck_archetype,
+          tournament_uuid: target.record.tournament_uuid,
+          opponent_uuid: target.record.opponent_uuid,
+        })
+        break
+    }
+  }
+  mutationDialog.value = { action, target }
+}
+
+function closeMutation(): void {
+  if (!isSubmitting.value) mutationDialog.value = null
+}
+
+async function reloadAfterMutation(): Promise<void> {
+  await loadReferenceData()
+  await Promise.all([
+    loadAnalytics(),
+    loadDashboardMatches(),
+    loadTournamentMatches(),
+  ])
+}
+
+function saveMutation(): void {
+  const pending = mutationDialog.value
+  if (!pending || pending.action !== 'edit') return
+  void runCreate(async () => {
+    const { kind, record } = pending.target
+    if (kind === 'deck') {
+      await productApi.updateDeck(record.uuid, {
+        name: editDraft.name.trim(),
+        game: editDraft.game,
+        decklist: editDraft.decklist.trim(),
+      })
+    } else if (kind === 'tournament') {
+      await productApi.updateTournament(record.uuid, {
+        name: editDraft.name.trim(),
+        date: `${editDraft.date}T00:00:00Z`,
+        game: editDraft.game,
+        scope: editDraft.scope,
+        is_official_circuit: editDraft.is_official_circuit,
+        ...(editDraft.deck_uuid ? { deck_uuid: editDraft.deck_uuid } : {}),
+      })
+    } else if (kind === 'opponent') {
+      await productApi.updateOpponent(record.uuid, editDraft.name.trim())
+    } else {
+      await productApi.updateMatch(record.uuid, {
+        result: editDraft.result,
+        round_number: Number(editDraft.round_number),
+        phase: editDraft.phase,
+        opposing_deck_archetype: editDraft.opposing_deck_archetype.trim(),
+        tournament_uuid: editDraft.tournament_uuid,
+        opponent_uuid: editDraft.opponent_uuid,
+      })
+    }
+    mutationDialog.value = null
+    await reloadAfterMutation()
+  }, props.messages.workspace.updateSuccess)
+}
+
+function confirmDelete(): void {
+  const pending = mutationDialog.value
+  if (!pending || pending.action !== 'delete') return
+  void runCreate(async () => {
+    const { kind, record } = pending.target
+    if (kind === 'deck') await productApi.deleteDeck(record.uuid)
+    else if (kind === 'tournament') await productApi.deleteTournament(record.uuid)
+    else if (kind === 'opponent') await productApi.deleteOpponent(record.uuid)
+    else await productApi.deleteMatch(record.uuid)
+    mutationDialog.value = null
+    await reloadAfterMutation()
+  }, props.messages.workspace.deleteSuccess)
 }
 
 function createDeck(): void {
@@ -564,6 +755,8 @@ async function saveFlowRound(nextPhase: MatchPhase | null): Promise<void> {
       tournament_uuid: tournament.uuid,
       opponent_uuid: matchDraft.opponent_uuid,
     })
+    allMatches.value.unshift(created)
+    dashboardMatchCount.value += 1
     if (selectedTournamentId.value === tournament.uuid) matches.value.unshift(created)
     addRegisteredOpponentArchetype(tournament.game, archetypeName)
     selectedOpponentArchetype.value = ''
@@ -647,6 +840,8 @@ function createMatch(): void {
       tournament_uuid: tournamentId,
       opponent_uuid: matchDraft.opponent_uuid,
     })
+    allMatches.value.unshift(created)
+    dashboardMatchCount.value += 1
     if (selectedTournamentId.value === tournamentId) matches.value.unshift(created)
     if (tournament) addRegisteredOpponentArchetype(tournament.game, archetypeName)
     matchDraft.round_number += 1
@@ -805,7 +1000,7 @@ onMounted(loadInitialData)
                   <input v-model.trim="flowDeckDraft.name" required maxlength="255" autocomplete="off">
                 </label>
                 <label>{{ messages.workspace.fields.decklist }}
-                  <textarea v-model.trim="flowDeckDraft.decklist" required maxlength="500" rows="3"></textarea>
+                  <textarea v-model.trim="flowDeckDraft.decklist" required maxlength="2000" rows="3"></textarea>
                   <small>{{ messages.workspace.decklistHint }}</small>
                 </label>
                 <button
@@ -1025,7 +1220,7 @@ onMounted(loadInitialData)
                 </select>
               </label>
               <label>{{ messages.workspace.fields.decklist }}
-                <textarea v-model.trim="deckDraft.decklist" required maxlength="500" rows="3"></textarea>
+                <textarea v-model.trim="deckDraft.decklist" required maxlength="2000" rows="3"></textarea>
                 <small>{{ messages.workspace.decklistHint }}</small>
               </label>
               <button class="button button-primary" type="submit" :disabled="isSubmitting">
@@ -1068,6 +1263,14 @@ onMounted(loadInitialData)
                       {{ messages.workspace.openDecklist }} <span aria-hidden="true">↗</span>
                     </a>
                     <pre v-else>{{ deck.decklist }}</pre>
+                    <div class="record-actions">
+                      <button class="workspace-text-button" type="button" @click="beginMutation({ kind: 'deck', record: deck }, 'edit')">
+                        {{ messages.workspace.actions.edit }}
+                      </button>
+                      <button class="workspace-text-button record-delete-button" type="button" @click="beginMutation({ kind: 'deck', record: deck }, 'delete')">
+                        {{ messages.workspace.actions.delete }}
+                      </button>
+                    </div>
                   </div>
                 </details>
               </li>
@@ -1121,9 +1324,17 @@ onMounted(loadInitialData)
                   <small>{{ new Date(`${tournament.date.slice(0, 10)}T00:00:00`).toLocaleDateString(locale) }} · {{ gameLabel(tournament.game) }}</small>
                   <small>{{ scopeLabel(tournament.scope) }}<template v-if="tournament.is_official_circuit"> · {{ messages.workspace.officialCircuit }}</template></small>
                 </div>
-                <button class="workspace-text-button" type="button" @click="openTournamentMatches(tournament.uuid)">
-                  {{ messages.workspace.actions.viewMatches }} <span aria-hidden="true">→</span>
-                </button>
+                <div class="record-actions">
+                  <button class="workspace-text-button" type="button" @click="openTournamentMatches(tournament.uuid)">
+                    {{ messages.workspace.actions.viewMatches }} <span aria-hidden="true">→</span>
+                  </button>
+                  <button class="workspace-text-button" type="button" @click="beginMutation({ kind: 'tournament', record: tournament }, 'edit')">
+                    {{ messages.workspace.actions.edit }}
+                  </button>
+                  <button class="workspace-text-button record-delete-button" type="button" @click="beginMutation({ kind: 'tournament', record: tournament }, 'delete')">
+                    {{ messages.workspace.actions.delete }}
+                  </button>
+                </div>
               </li>
             </ul>
           </section>
@@ -1201,6 +1412,14 @@ onMounted(loadInitialData)
                   <small>{{ opponentName(match.opponent_uuid) }} · {{ match.opposing_deck_archetype }}</small>
                 </div>
                 <span class="match-result-label" :class="`result-${match.result}`">{{ resultLabel(match.result) }}</span>
+                <div class="record-actions">
+                  <button class="workspace-text-button" type="button" @click="beginMutation({ kind: 'match', record: match }, 'edit')">
+                    {{ messages.workspace.actions.edit }}
+                  </button>
+                  <button class="workspace-text-button record-delete-button" type="button" @click="beginMutation({ kind: 'match', record: match }, 'delete')">
+                    {{ messages.workspace.actions.delete }}
+                  </button>
+                </div>
               </li>
             </ul>
           </section>
@@ -1228,6 +1447,14 @@ onMounted(loadInitialData)
               <li v-for="opponent in opponents" :key="opponent.uuid" class="workspace-record-card">
                 <span class="workspace-opponent-avatar" aria-hidden="true">{{ opponent.name.charAt(0).toUpperCase() }}</span>
                 <div><strong>{{ opponent.name }}</strong><small>{{ messages.workspace.nav.opponents }}</small></div>
+                <div class="record-actions">
+                  <button class="workspace-text-button" type="button" @click="beginMutation({ kind: 'opponent', record: opponent }, 'edit')">
+                    {{ messages.workspace.actions.edit }}
+                  </button>
+                  <button class="workspace-text-button record-delete-button" type="button" @click="beginMutation({ kind: 'opponent', record: opponent }, 'delete')">
+                    {{ messages.workspace.actions.delete }}
+                  </button>
+                </div>
               </li>
             </ul>
           </section>
@@ -1328,5 +1555,100 @@ onMounted(loadInitialData)
         </div>
       </template>
     </section>
+    <div v-if="mutationDialog" class="workspace-modal-backdrop" @click.self="closeMutation">
+      <section class="workspace-modal" role="dialog" aria-modal="true">
+        <div class="workspace-panel-heading">
+          <div>
+            <p class="workspace-eyebrow">
+              {{ mutationDialog.action === 'edit' ? messages.workspace.actions.edit : messages.workspace.actions.delete }}
+            </p>
+            <h2>{{ mutationRecordName }}</h2>
+          </div>
+        </div>
+        <p class="workspace-mutation-impact">{{ mutationImpact }}</p>
+        <p v-if="mutationAffectedTournaments" class="workspace-mutation-related">{{ mutationAffectedTournaments }}</p>
+        <form v-if="mutationDialog.action === 'edit'" class="workspace-form" @submit.prevent="saveMutation">
+          <template v-if="mutationDialog.target.kind === 'deck'">
+            <label>{{ messages.workspace.fields.name }}<input v-model.trim="editDraft.name" required maxlength="255"></label>
+            <label>{{ messages.workspace.fields.game }}
+              <select v-model="editDraft.game" required>
+                <option v-for="game in games" :key="game" :value="game">{{ gameLabel(game) }}</option>
+              </select>
+            </label>
+            <label>{{ messages.workspace.fields.decklist }}<textarea v-model.trim="editDraft.decklist" required maxlength="2000" rows="4"></textarea></label>
+          </template>
+          <template v-else-if="mutationDialog.target.kind === 'tournament'">
+            <label>{{ messages.workspace.fields.name }}<input v-model.trim="editDraft.name" required maxlength="255"></label>
+            <div class="workspace-form-grid">
+              <label>{{ messages.workspace.fields.date }}<input v-model="editDraft.date" type="date" required></label>
+              <label>{{ messages.workspace.fields.game }}
+                <select v-model="editDraft.game" required>
+                  <option v-for="game in games" :key="game" :value="game">{{ gameLabel(game) }}</option>
+                </select>
+              </label>
+            </div>
+            <label>{{ messages.workspace.fields.scope }}
+              <select v-model="editDraft.scope" required>
+                <option v-for="scope in scopeOptions" :key="scope" :value="scope">{{ scopeLabel(scope) }}</option>
+              </select>
+            </label>
+            <label>{{ messages.workspace.fields.deck }}
+              <select v-model="editDraft.deck_uuid">
+                <option value="">{{ messages.workspace.chooseDeck }}</option>
+                <option v-for="deck in editableTournamentDecks" :key="deck.uuid" :value="deck.uuid">{{ deck.name }}</option>
+              </select>
+            </label>
+            <label class="workspace-checkbox"><input v-model="editDraft.is_official_circuit" type="checkbox"><span>{{ messages.workspace.officialCircuit }}</span></label>
+          </template>
+          <template v-else-if="mutationDialog.target.kind === 'opponent'">
+            <label>{{ messages.workspace.fields.name }}<input v-model.trim="editDraft.name" required maxlength="255"></label>
+          </template>
+          <template v-else>
+            <label>{{ messages.workspace.nav.tournaments }}
+              <select v-model="editDraft.tournament_uuid" required>
+                <option v-for="tournament in tournaments" :key="tournament.uuid" :value="tournament.uuid">{{ tournament.name }}</option>
+              </select>
+            </label>
+            <label>{{ messages.workspace.fields.opponent }}
+              <select v-model="editDraft.opponent_uuid" required>
+                <option v-for="opponent in opponents" :key="opponent.uuid" :value="opponent.uuid">{{ opponent.name }}</option>
+              </select>
+            </label>
+            <div class="workspace-form-grid">
+              <label>{{ messages.workspace.fields.result }}
+                <select v-model="editDraft.result" required>
+                  <option v-for="result in resultOptions" :key="result" :value="result">{{ resultLabel(result) }}</option>
+                </select>
+              </label>
+              <label>{{ messages.workspace.fields.round }}<input v-model.number="editDraft.round_number" type="number" min="1" required></label>
+            </div>
+            <label>{{ messages.workspace.fields.phase }}
+              <select v-model="editDraft.phase" required>
+                <option v-for="phase in phaseOptions" :key="phase" :value="phase">{{ phaseLabel(phase) }}</option>
+              </select>
+            </label>
+            <label>{{ messages.workspace.fields.opposingDeck }}
+              <input v-model.trim="editDraft.opposing_deck_archetype" required maxlength="255">
+            </label>
+          </template>
+          <div class="workspace-modal-actions">
+            <button class="button button-secondary" type="button" :disabled="isSubmitting" @click="closeMutation">
+              {{ messages.workspace.actions.cancel }}
+            </button>
+            <button class="button button-primary" type="submit" :disabled="isSubmitting">
+              {{ isSubmitting ? messages.workspace.actions.saving : messages.workspace.actions.saveChanges }}
+            </button>
+          </div>
+        </form>
+        <div v-else class="workspace-modal-actions">
+          <button class="button button-secondary" type="button" :disabled="isSubmitting" @click="closeMutation">
+            {{ messages.workspace.actions.cancel }}
+          </button>
+          <button class="button button-primary record-delete-confirm" type="button" :disabled="isSubmitting" @click="confirmDelete">
+            {{ isSubmitting ? messages.workspace.actions.saving : messages.workspace.actions.confirmDelete }}
+          </button>
+        </div>
+      </section>
+    </div>
   </main>
 </template>

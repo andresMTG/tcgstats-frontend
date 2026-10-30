@@ -35,6 +35,7 @@ type CreateMatchInput = {
   tournament_uuid: string
   opponent_uuid: string
 }
+type UpdateMatchInput = CreateMatchInput
 type DateRange = { from?: string; to?: string; game?: GameName }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -108,6 +109,7 @@ async function request(path: string, options: RequestInit = {}): Promise<unknown
     const message = (await response.text()).trim() || `Request failed (${response.status}).`
     throw new ApiError(message, response.status)
   }
+  if (response.status === 204) return undefined
   return await response.json()
 }
 
@@ -126,6 +128,16 @@ async function post<T>(path: string, body: object, isItem: (value: unknown) => v
   return data
 }
 
+async function put<T>(path: string, body: object, isItem: (value: unknown) => value is T): Promise<T> {
+  const data = await request(path, { method: 'PUT', body: JSON.stringify(body) })
+  if (!isItem(data)) throw new Error('The server returned data in an unexpected format.')
+  return data
+}
+
+async function remove(path: string): Promise<void> {
+  await request(path, { method: 'DELETE' })
+}
+
 function dateQuery(range: DateRange): string {
   const query = new URLSearchParams()
   if (range.from) query.set('from', range.from)
@@ -138,13 +150,22 @@ function dateQuery(range: DateRange): string {
 export const productApi = {
   listDecks: () => getList('/decks', isDeck),
   createDeck: (input: CreateDeckInput) => post('/decks', input, isDeck),
+  updateDeck: (id: string, input: CreateDeckInput) => put(`/decks/${encodeURIComponent(id)}`, input, isDeck),
+  deleteDeck: (id: string) => remove(`/decks/${encodeURIComponent(id)}`),
   listTournaments: () => getList('/tournaments', isTournament),
   createTournament: (input: CreateTournamentInput) => post('/tournaments', input, isTournament),
+  updateTournament: (id: string, input: CreateTournamentInput) =>
+    put(`/tournaments/${encodeURIComponent(id)}`, input, isTournament),
+  deleteTournament: (id: string) => remove(`/tournaments/${encodeURIComponent(id)}`),
   listOpponents: () => getList('/opponents', isOpponent),
   createOpponent: (name: string) => post('/opponents', { name }, isOpponent),
+  updateOpponent: (id: string, name: string) => put(`/opponents/${encodeURIComponent(id)}`, { name }, isOpponent),
+  deleteOpponent: (id: string) => remove(`/opponents/${encodeURIComponent(id)}`),
   listTournamentMatches: (tournamentId: string) =>
     getList(`/tournaments/${encodeURIComponent(tournamentId)}/matches`, isMatch),
   createMatch: (input: CreateMatchInput) => post('/matches', input, isMatch),
+  updateMatch: (id: string, input: UpdateMatchInput) => put(`/matches/${encodeURIComponent(id)}`, input, isMatch),
+  deleteMatch: (id: string) => remove(`/matches/${encodeURIComponent(id)}`),
   deckPerformance: (range: DateRange) =>
     getList(`/analytics/decks${dateQuery(range)}`, isDeckPerformance),
   deckMatchupPerformance: (range: DateRange) =>

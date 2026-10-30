@@ -121,10 +121,13 @@
     "noSwissOpponents": "All available opponents have already been played in this tournament.",
     "chooseDeck": "No deck linked",
     "officialCircuit": "Official circuit",
-    "decklistHint": "Decklist text or link (up to 500 characters).",
+    "decklistHint": "Decklist text or link (up to 2000 characters).",
     "tournamentMatches": "Tournament matches",
     "matchHistoryHint": "Match history is retrieved by tournament.",
     "createSuccess": "Record created successfully.",
+    "updateSuccess": "Record updated. Statistics have been recalculated.",
+    "deleteSuccess": "Data permanently deleted.",
+    "impactLoadError": "The deletion impact could not be confirmed. Refresh the data and try again.",
     "analytics": {
       "description": "Compare your results by deck, opponent, and competitive stage.",
       "gameFilter": "Filter by game",
@@ -164,7 +167,23 @@
       "saveMatch": "Save match",
       "saving": "Saving...",
       "viewMatches": "View matches",
-      "addOpponent": "Add opponent"
+      "addOpponent": "Add opponent",
+      "edit": "Edit",
+      "delete": "Delete",
+      "saveChanges": "Save changes",
+      "confirmDelete": "Confirm deletion",
+      "cancel": "Cancel"
+    },
+    "mutationImpact": {
+      "editDeck": "The deck name, game, and list will update wherever this deck is referenced; filters and statistics groupings may change, but matches are not removed.",
+      "editTournament": "The tournament date, game, level, or deck are used to group matches and calculate statistics by period, game, deck, and level.",
+      "editOpponent": "The updated name will appear on matches and opponent performance summaries; match results remain unchanged.",
+      "editMatch": "Changing the result, round, phase, archetype, tournament, or opponent updates match history and the related statistics.",
+      "affectedTournaments": "Affected tournaments: {names}.",
+      "deck": "This deck is associated with {tournaments} tournaments and {matches} matches. This data will be permanently deleted.",
+      "tournament": "This tournament has {matches} matches. This data will be permanently deleted.",
+      "opponent": "This opponent appears in {matches} matches. This data will be permanently deleted.",
+      "match": "This match will be permanently deleted."
     },
     "flow": {
       "start": "Start tournament",

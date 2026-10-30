@@ -121,10 +121,13 @@
     "noSwissOpponents": "Todos os oponentes disponíveis já foram enfrentados neste torneio.",
     "chooseDeck": "Sem deck associado",
     "officialCircuit": "Circuito oficial",
-    "decklistHint": "Texto ou link da lista (até 500 caracteres).",
+    "decklistHint": "Texto ou link da lista (até 2000 caracteres).",
     "tournamentMatches": "Partidas do torneio",
     "matchHistoryHint": "O histórico de partidas é consultado por torneio.",
     "createSuccess": "Registro criado com sucesso.",
+    "updateSuccess": "Registro atualizado. As estatísticas foram recalculadas.",
+    "deleteSuccess": "Dados excluídos permanentemente.",
+    "impactLoadError": "Não foi possível confirmar o impacto da exclusão. Atualize os dados e tente novamente.",
     "analytics": {
       "description": "Compare seus resultados por deck, oponente e etapa competitiva.",
       "gameFilter": "Filtrar por jogo",
@@ -164,7 +167,23 @@
       "saveMatch": "Salvar partida",
       "saving": "Salvando...",
       "viewMatches": "Ver partidas",
-      "addOpponent": "Novo oponente"
+      "addOpponent": "Novo oponente",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "saveChanges": "Salvar alterações",
+      "confirmDelete": "Confirmar exclusão",
+      "cancel": "Cancelar"
+    },
+    "mutationImpact": {
+      "editDeck": "Nome, jogo e lista serão atualizados em todas as referências ao deck; isso pode alterar filtros e agrupamentos das estatísticas, mas não remove partidas.",
+      "editTournament": "Data, jogo, nível ou deck do torneio são usados para agrupar as partidas e calcular estatísticas por período, jogo, deck e nível.",
+      "editOpponent": "O nome atualizado será refletido nas partidas e nos indicadores agrupados por oponente; os resultados das partidas permanecem.",
+      "editMatch": "Resultado, rodada, fase, arquétipo, torneio ou oponente alteram o histórico e os indicadores correspondentes.",
+      "affectedTournaments": "Torneios afetados: {names}.",
+      "deck": "Este deck está associado a {tournaments} torneios e {matches} partidas. Esses dados serão excluídos permanentemente.",
+      "tournament": "Este torneio contém {matches} partidas. Esses dados serão excluídos permanentemente.",
+      "opponent": "Este oponente aparece em {matches} partidas. Esses dados serão excluídos permanentemente.",
+      "match": "Esta partida será excluída permanentemente."
     },
     "flow": {
       "start": "Iniciar torneio",

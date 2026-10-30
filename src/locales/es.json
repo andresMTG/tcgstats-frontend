@@ -121,10 +121,13 @@
     "noSwissOpponents": "Ya te enfrentaste a todos los oponentes disponibles en este torneo.",
     "chooseDeck": "Sin mazo asociado",
     "officialCircuit": "Circuito oficial",
-    "decklistHint": "Texto o enlace de la lista (hasta 500 caracteres).",
+    "decklistHint": "Texto o enlace de la lista (hasta 2000 caracteres).",
     "tournamentMatches": "Partidas del torneo",
     "matchHistoryHint": "El historial de partidas se consulta por torneo.",
     "createSuccess": "Registro creado correctamente.",
+    "updateSuccess": "Registro actualizado. Se recalcularon las estadísticas.",
+    "deleteSuccess": "Datos eliminados permanentemente.",
+    "impactLoadError": "No se pudo confirmar el impacto de la eliminación. Actualiza los datos e inténtalo de nuevo.",
     "analytics": {
       "description": "Compara tus resultados por mazo, oponente y etapa competitiva.",
       "gameFilter": "Filtrar por juego",
@@ -164,7 +167,23 @@
       "saveMatch": "Guardar partida",
       "saving": "Guardando...",
       "viewMatches": "Ver partidas",
-      "addOpponent": "Añadir oponente"
+      "addOpponent": "Añadir oponente",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "saveChanges": "Guardar cambios",
+      "confirmDelete": "Confirmar eliminación",
+      "cancel": "Cancelar"
+    },
+    "mutationImpact": {
+      "editDeck": "El nombre, juego y lista del mazo se actualizarán en todas sus referencias; los filtros y agrupaciones estadísticas pueden cambiar, pero no se eliminan partidas.",
+      "editTournament": "La fecha, juego, nivel o mazo del torneo se usan para agrupar partidas y calcular estadísticas por período, juego, mazo y nivel.",
+      "editOpponent": "El nombre actualizado aparecerá en las partidas y los indicadores por oponente; los resultados se mantienen.",
+      "editMatch": "Cambiar el resultado, ronda, fase, arquetipo, torneo u oponente actualiza el historial y las estadísticas relacionadas.",
+      "affectedTournaments": "Torneos afectados: {names}.",
+      "deck": "Este mazo está asociado a {tournaments} torneos y {matches} partidas. Estos datos se eliminarán permanentemente.",
+      "tournament": "Este torneo tiene {matches} partidas. Estos datos se eliminarán permanentemente.",
+      "opponent": "Este oponente aparece en {matches} partidas. Estos datos se eliminarán permanentemente.",
+      "match": "Esta partida se eliminará permanentemente."
     },
     "flow": {
       "start": "Iniciar torneo",
